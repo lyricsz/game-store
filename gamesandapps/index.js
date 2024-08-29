@@ -13,12 +13,13 @@ class Games{
         this.stArray.forEach((el, index) => {
             const {name, author, description, src} = el;
             const div = this.divArray[index];
-            div.id = index;
+            div.id = index; 
             this.applyToDiv(name, author, description, src, div);
         });
     }
     flip(div){
         div.innerHTML = "";
+        div.onclick = () => {}
         div.style.background = "radial-gradient(white, silver)";
         const span = document.createElement("span");
         const {name, author, description, src} = this.stArray[div.id];
@@ -30,6 +31,7 @@ class Games{
         [span, span2].forEach(span => span.setAttribute("style", "color: #010301; text-shadow: 0px 0px 1px wheat; display: block; " + 
                                                         "width: 100%; padding: 0 4px; text-align: left; font-size: 14px; margin: 2px;"))
         div.style.transform = "rotateY(360deg)"
+        div.removeEventListener("click", gameFlip);
         setTimeout(() => {
             div.appendChild(span);
             div.appendChild(span2);
@@ -38,6 +40,7 @@ class Games{
                 div.innerHTML = "";
                 setTimeout(( ) => {
                 this.applyToDiv(name, author, description, src, div);
+                div.addEventListener("click", gameFlip);
                 }, 2000);
             }, 10000);
         }, 2000);
@@ -90,18 +93,24 @@ class Games{
 
 let games = new Games(4, "gameBox");
 games.init().forEach(tr => {
-    gameTable.appendChild(tr)
+    gameTable.appendChild(tr);
 });
-// games.stArray.push(
-//     {name: "Cheaters World", author: "Lyricsz Games", description: "Cheaters are in the village, Mr. Black will catch them all. have fun", src: "./cheaters.png"}
-// );
+games.stArray.push(
+    {name: "Cheaters World", author: "Lyricsz Games", description: "Cheaters are in the village, Mr. Black will catch them all. have fun.", src: "./../gameicons/cheaters.png"},
+    {name: "Ani Connet", author: "Lyricsz Games", description: "Have fun rescuing the ani, Salvar.", src: "./../gameicons/aniconnet.gif"},
+    {name: "My Math Booster", author: "Lyricsz Games", description: "Have fun Learning math with this exciting app.", src: "./../gameicons/mymathbooster.png"},
+    {name: "Robolite", author: "Lyricsz Games", description: "A Robot get lost in a savage planet. Let's help find it's way back home.", src: "./../gameicons/robolite.png"},
+    {name: "Santa Please Concentrate", author: "Lyricsz Games", description: "Hello friends, The goal of this simple memory game is to match two pairs of card ", src: "./../gameicons/santapleaseconcentrate.png"}
+);
 games.pasteToDiv();
 
 games.divArray.forEach(game => {
-    game.addEventListener("click", function(game) {
-        games.flip(game.target);
-    });
-})
+    game.addEventListener("click", gameFlip, game);
+});
+
+function gameFlip(game){
+    games.flip(game.target);
+}
 
 let apps = new Games(4, "appBox");
 apps.init().forEach(tr => {
